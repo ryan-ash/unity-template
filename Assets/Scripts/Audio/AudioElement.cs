@@ -3,9 +3,12 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class AudioElement : MonoBehaviour {
+    public bool letInterrupt = true;
     public bool noFadeOnStart = false;
     public bool noFadeOnStop = false;
     public float offset = 0f;
+    public float volume = 1f;
+
     public AudioSequenceType sequenceType = AudioSequenceType.None;
 
     [HideInInspector]
@@ -41,7 +44,6 @@ public class AudioElement : MonoBehaviour {
         }
 
         currentSource = sequenceSources[sequence.Next()];
-        // CustomDebug.Log("AudioManager :: playing " + currentSource.gameObject.name + " of " + gameObject.name + " audio element");
 
         if (mute)
         {
@@ -59,11 +61,14 @@ public class AudioElement : MonoBehaviour {
 
     public void StartPlaying()
     {
+        if (currentSource.isPlaying && !letInterrupt)
+            return;
+        
         if (fade.enabled)
         {
             if (noFadeOnStart)
             {
-                currentSource.volume = 1f;            
+                currentSource.volume = volume;            
             }
             else
             {
@@ -73,7 +78,7 @@ public class AudioElement : MonoBehaviour {
                     { 
                         currentSource.volume = newVolume; 
                     },
-                    0f, 1f, fade.length
+                    0f, volume, fade.length
                 ).setEase(fade.tween);
             }
         }
@@ -92,8 +97,6 @@ public class AudioElement : MonoBehaviour {
         {
             return;
         }
-
-        // CustomDebug.Log("AudioManager :: stopping " + currentSource.gameObject.name + " of " + gameObject.name + " audio element");
 
         if (fade.enabled)
         {

@@ -24,6 +24,7 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 478540}
+  - component: {fileID: 114481709507359770}
   m_Layer: 0
   m_Name: AudioRoot
   m_TagString: Untagged
@@ -99,9 +100,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fb440c3deae92104695ef62ed0ca2d98, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  multitrack: 0
   fadeEnabled: 1
   fadeLength: 0.5
-  defaultTrack: 
+  defaultTracks: []
   tween: 7
 --- !u!114 &11485702
 MonoBehaviour:
@@ -125,3 +127,17 @@ Prefab:
   m_ParentPrefab: {fileID: 0}
   m_RootGameObject: {fileID: 164508}
   m_IsPrefabParent: 1
+--- !u!114 &114481709507359770
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 164508}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e9afd1e056beb42ba95da9a697069549, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  audioRoot: {fileID: 478540}
+  musicGroupComponent: {fileID: 11443636}
+  soundFXGroupComponent: {fileID: 11485702}

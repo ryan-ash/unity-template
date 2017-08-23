@@ -5,12 +5,28 @@ using System;
 
 public class AudioManager : MonoBehaviour {
     
+    public Transform audioRoot;
+
     public AudioGroup musicGroupComponent;
     public AudioGroup soundFXGroupComponent;
 
     private string[] consecutiveTriggersDelimiter = new string[] { "//" };
     private char triggerElementsDelimiter = '/';
 
+    public static AudioManager instance;
+
+    void Awake()
+    {
+        if (instance)
+        {
+            DestroyImmediate(this.gameObject);
+        }
+        else
+        {
+            instance = this;
+            DontDestroyOnLoad(this);
+        }
+    }
     void Start() 
     {
         PlayerPrefsWrapper.toggleMusicEvent += OnToggleMusic;
@@ -31,9 +47,15 @@ public class AudioManager : MonoBehaviour {
     void OnToggleSoundFX(bool b) 
     {
         soundFXGroupComponent.mute = !b;
+        foreach (Transform audioSpace in audioRoot)
+        {
+            SFXGroup targetSpace = audioSpace.gameObject.GetComponent<SFXGroup>();
+            if (targetSpace != null)
+                targetSpace.mute = !b;
+        }
     }
 
-    public void FireTrigger(string triggerLine)
+    public void PlaySound(string triggerLine)
     {
         string[] consecutiveTriggers = triggerLine.Split(consecutiveTriggersDelimiter, StringSplitOptions.None);
         ParseTriggers(consecutiveTriggers);
@@ -45,7 +67,7 @@ public class AudioManager : MonoBehaviour {
 
         foreach (string trigger in consecutiveTriggers)
         {
-            currentAction = GenerateAction(trigger.Split(triggerElementsDelimiter));
+            currentAction = GenerateAction(trigger.Trim().Split(triggerElementsDelimiter));
             currentAction.Fire();
         }
     }
@@ -63,17 +85,39 @@ public class AudioManager : MonoBehaviour {
                 i++;
                 break;
             case "SFX":
-                i++;
-                goto default;
-            default:
                 action.targetSpace = soundFXGroupComponent;
+                i++;
+                break;
+            default:
+                foreach (Transform audioSpace in audioRoot) {
+                    if (cylinder[i] == audioSpace.gameObject.name) {
+                        AudioGroup targetSpace = audioSpace.gameObject.GetComponent<AudioGroup>();
+                        if (targetSpace != null) {
+                            action.targetSpace = targetSpace;
+                            i++;
+                            break;
+                        }
+                    }
+                }
+                if (action.targetSpace == null) {
+                    // fallback to SFX
+                    action.targetSpace = soundFXGroupComponent;                    
+                }
                 break;
         }
 
         // then we pick the target
         action.targetName = cylinder[i];
 
-        // and check if it exists
+        // check if audio group is properly initialized
+        if (action.targetSpace.elements == null)
+        {
+            Debug.LogWarning("AudioManager :: initialization is not complete; don't run sounds on Start or Awake, use built in DefaultTrack system");
+            action.type = AudioActionType.SelfDestruct;
+            return action;
+        }
+
+        // and check if the target exists
         if (action.targetSpace.GetElementByName(action.targetName) == null)
         {
             Debug.LogWarning("AudioManager :: couldn't find '" + cylinder[i] + "' in " + action.targetSpace.gameObject.name);

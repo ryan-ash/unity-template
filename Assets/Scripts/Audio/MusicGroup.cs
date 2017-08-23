@@ -2,17 +2,20 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class MusicGroup : AudioGroup {
+    public bool multitrack = false;
     [Header("Fade")]
     public bool fadeEnabled = false;
     public float fadeLength = 0f;
-    public string defaultTrack = "";
+    public string[] defaultTracks;
     public LeanTweenType tween;
 
-    private AudioElement currentMusic;
+    private List<AudioElement> currentMusic;
 
     protected override void Start()
     {
         base.Start();
+
+        currentMusic = new List<AudioElement>();
 
         foreach (KeyValuePair<string, AudioElement> audioElement in elements)
         {
@@ -21,9 +24,10 @@ public class MusicGroup : AudioGroup {
 
         mute = !PlayerPrefsWrapper.MusicEnabled;
 
-        if (defaultTrack != "")
+        if (defaultTracks != null && defaultTracks.Length > 0)
         {
-            Play(defaultTrack);
+            foreach (string defaultTrack in defaultTracks)
+                Play(defaultTrack);
         }
     }
 
@@ -34,12 +38,28 @@ public class MusicGroup : AudioGroup {
             return false;
         }
 
-        if (currentMusic != null)
+        if (currentMusic.Count > 0 && !multitrack)
         {
-            currentMusic.Stop();
+            currentMusic[0].Stop();
+            currentMusic.RemoveAt(0);
         }
 
-        currentMusic = elements[key];
+        currentMusic.Add(elements[key]);
+        return true;
+    }
+
+    public override bool Stop(string key)
+    {
+        if (!base.Stop(key))
+        {
+            return false;
+        }
+
+        int trackIndex = currentMusic.IndexOf(elements[key]);
+
+        if (trackIndex != -1)
+            currentMusic.RemoveAt(trackIndex);
+
         return true;
     }
 
@@ -47,23 +67,29 @@ public class MusicGroup : AudioGroup {
     {
         base.Mute();
 
-        if (currentMusic == null)
+        if (currentMusic == null || currentMusic.Count == 0)
         {
             return;
         }
 
-        currentMusic.Stop();
+        foreach(AudioElement activeTrack in currentMusic)
+        {
+            activeTrack.Stop();
+        }
     }
 
     public override void UnMute()
     {
         base.UnMute();
 
-        if (currentMusic == null)
+        if (currentMusic == null || currentMusic.Count == 0)
         {
             return;
         }
 
-        currentMusic.Play();
+        foreach(AudioElement activeTrack in currentMusic)
+        {
+            activeTrack.Play();
+        }
     }
 }
