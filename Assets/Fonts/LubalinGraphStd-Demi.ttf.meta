@@ -1,0 +1,20 @@
+fileFormatVersion: 2
+guid: 80d70c2b42bfc4bb981634b59e557113
+TrueTypeFontImporter:
+  serializedVersion: 3
+  fontSize: 16
+  forceTextureCase: -2
+  characterSpacing: 1
+  characterPadding: 0
+  includeFontData: 1
+  fontNames:
+  - Memphis LT CYR Medium
+  fallbackFontReferences:
+  - {fileID: 12800000, guid: 6416f4692e1754171bf42fe38613ac37, type: 3}
+  - {fileID: 12800000, guid: 2a5c76ea159694065b9db1cc1efc0b57, type: 3}
+  customCharacters: 
+  fontRenderingMode: 0
+  ascentCalculationMode: 1
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
