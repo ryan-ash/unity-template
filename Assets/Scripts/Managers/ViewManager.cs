@@ -54,7 +54,7 @@ public class ViewManager<T> where T: ViewController {
     public void ResetQueue()
     {
         viewQueue.Clear();
-        UpdateQueue(true, GetID<MainMenuScreenController>());
+        UpdateQueue(true, GetID<MainMenuScreen>());
     }
 
     public T0 GetController<T0>() 

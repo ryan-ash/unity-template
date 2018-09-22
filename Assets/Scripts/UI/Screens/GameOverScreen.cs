@@ -1,8 +1,8 @@
 ﻿using UnityEngine;
 
-public class MainMenuScreenController : ScreenBaseController {
+public class GameOverScreen : ScreenBaseController {
 
-    private static MainMenuScreenController instance;
+    private static GameOverScreen instance;
 
     void Start()
     {
