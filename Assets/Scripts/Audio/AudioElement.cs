@@ -22,6 +22,7 @@ public class AudioElement : MonoBehaviour {
     public GameObject onStop;
 
     private bool mute = false;
+    private int tweenId = -1;
     private AudioSource[] sequenceSources;
     private AudioSource currentSource;
     private Dictionary<string, int> sequenceNameTable;
@@ -63,24 +64,22 @@ public class AudioElement : MonoBehaviour {
     {
         if (currentSource.isPlaying && !letInterrupt)
             return;
-        
-        if (fade.enabled)
+
+        if (noFadeOnStart || !fade.enabled)
         {
-            if (noFadeOnStart)
-            {
-                currentSource.volume = volume;            
-            }
-            else
-            {
-                currentSource.volume = 0f;
-                LeanTween.value(currentSource.gameObject, 
-                    (float newVolume) => 
-                    { 
-                        currentSource.volume = newVolume; 
-                    },
-                    0f, volume, fade.length
-                ).setEase(fade.tween);
-            }
+            currentSource.volume = volume;
+        }
+        else
+        {
+            currentSource.volume = 0f;
+            CancelPreviousTween();
+            tweenId = LeanTween.value(currentSource.gameObject, 
+                (float newVolume) => 
+                { 
+                    currentSource.volume = newVolume;
+                },
+                0f, volume, fade.length
+            ).setEase(fade.tween).id;
         }
 
         currentSource.Play();
@@ -106,7 +105,8 @@ public class AudioElement : MonoBehaviour {
             }
             else
             {
-                LeanTween.value(currentSource.gameObject, 
+                CancelPreviousTween();
+                tweenId = LeanTween.value(currentSource.gameObject, 
                     (float newVolume) => 
                     { 
                         currentSource.volume = newVolume; 
@@ -116,8 +116,9 @@ public class AudioElement : MonoBehaviour {
                     () =>
                     {
                         currentSource.Stop();
+                        tweenId = -1;
                     }
-                );
+                ).id;
 
                 return;
             }
@@ -157,6 +158,13 @@ public class AudioElement : MonoBehaviour {
         }
 
         sequence = new AudioSequence(sequenceType, sequenceLength);
+    }
+
+    private void CancelPreviousTween() {
+        if (tweenId != -1) {
+            LeanTween.cancel(tweenId);
+            tweenId = -1;
+        }
     }
 
     IEnumerator WaitAndPlay()

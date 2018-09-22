@@ -44,7 +44,9 @@ public class MusicGroup : AudioGroup {
             currentMusic.RemoveAt(0);
         }
 
+        Unqueue(key);
         currentMusic.Add(elements[key]);
+
         return true;
     }
 
@@ -55,10 +57,7 @@ public class MusicGroup : AudioGroup {
             return false;
         }
 
-        int trackIndex = currentMusic.IndexOf(elements[key]);
-
-        if (trackIndex != -1)
-            currentMusic.RemoveAt(trackIndex);
+        Unqueue(key);
 
         return true;
     }
@@ -91,5 +90,13 @@ public class MusicGroup : AudioGroup {
         {
             activeTrack.Play();
         }
+    }
+
+    private void Unqueue(string key)
+    {
+        int trackIndex = currentMusic.IndexOf(elements[key]);
+
+        if (trackIndex != -1)
+            currentMusic.RemoveAt(trackIndex);
     }
 }

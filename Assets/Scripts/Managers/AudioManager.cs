@@ -46,7 +46,6 @@ public class AudioManager : MonoBehaviour {
 
     void OnToggleSoundFX(bool b) 
     {
-        soundFXGroupComponent.mute = !b;
         foreach (Transform audioSpace in audioRoot)
         {
             SFXGroup targetSpace = audioSpace.gameObject.GetComponent<SFXGroup>();
