@@ -51,7 +51,7 @@ public class LTDescr
 	public float lastVal;
 	private uint _id;
 	public int loopCount;
-	public uint counter;
+	public uint counter = uint.MaxValue;
 	public float direction;
 	public float directionLast;
 	public float overshoot;
@@ -59,7 +59,6 @@ public class LTDescr
     public float scale;
 	public bool destroyOnComplete;
 	public Transform trans;
-	public LTRect ltRect;
 	internal Vector3 fromInternal;
 	public Vector3 from { get { return this.fromInternal; } set { this.fromInternal = value; } }
 	internal Vector3 toInternal;
@@ -962,7 +961,9 @@ public class LTDescr
 			dt = dt*directionLocal;
 			this.passed += dt;
 
-			this.ratioPassed = Mathf.Clamp01(this.passed / this.time); // need to clamp when finished so it will finish at the exact spot and not overshoot
+			this.passed = Mathf.Clamp(this.passed, 0f, this.time); 
+
+			this.ratioPassed = (this.passed / this.time); // need to clamp when finished so it will finish at the exact spot and not overshoot
 
 			this.easeInternal();
 
@@ -1930,7 +1931,8 @@ public class LTDescr
 	* @param {Action<object>} onComplete:Action<object> the method that should be called when the tween is finished ex: tweenFinished( object myObj ){ }
 	* @return {LTDescr} LTDescr an object that distinguishes the tween
 	* @example
-	* LeanTween.moveX(gameObject, 5f, 2.0f ).setOnComplete( tweenFinished );
+	* object tweenFinishedObj = "hi" as object;
+	* LeanTween.moveX(gameObject, 5f, 2.0f ).setOnComplete( tweenFinished, tweenFinishedObj );
 	*/
 	public LTDescr setOnComplete( Action<object> onComplete ){
 		this._optional.onCompleteObject = onComplete;
