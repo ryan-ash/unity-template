@@ -1,9 +1,8 @@
 ﻿using UnityEngine;
-using UnityEngine.UI;
 using System.Collections;
 
 [ExecuteInEditMode]
-public class FontAwesome : MonoBehaviour {
+public class FontAwesome3D : MonoBehaviour {
 	public const string fontAssetName = "FontAwesome/FontAwesome";
 
 	public int size = 128;
@@ -16,23 +15,22 @@ public class FontAwesome : MonoBehaviour {
 
 	// Properties
 
-	private Text IconHolder {
+	private TextMesh IconHolder {
 		get {
 			if (iconHolder == null) {
-				iconHolder = GetComponent<Text>();
+				iconHolder = GetComponent<TextMesh>();
 				if (iconHolder == null) {
-					iconHolder = gameObject.AddComponent<Text>() as Text;
+					iconHolder = gameObject.AddComponent<TextMesh>() as TextMesh;
 				}
-				iconHolder.font = FAFont;
+				// iconHolder.font = FAFont;
 				iconHolder.hideFlags = HideFlags.HideInInspector;
-				iconHolder.alignment = TextAnchor.MiddleCenter;
-				iconHolder.verticalOverflow = VerticalWrapMode.Overflow;
-				iconHolder.horizontalOverflow = HorizontalWrapMode.Overflow;
+				iconHolder.alignment = TextAlignment.Center;
+				iconHolder.anchor = TextAnchor.MiddleCenter;
 			}
 			return iconHolder;
 		}
 	}
-	private Text iconHolder;
+	private TextMesh iconHolder;
 
 	private Font FAFont {
 		get {
@@ -70,6 +68,11 @@ public class FontAwesome : MonoBehaviour {
 		IconHolder.text = HexToChar(iconHex).ToString();
 	}
 
+	public void UpdateIcon(string name) {
+		this.name = name;
+		UpdateIcon();
+	}
+
 	void UpdateTextParams() {		
 		IconHolder.fontSize = size;
 		IconHolder.color = color;
@@ -80,9 +83,14 @@ public class FontAwesome : MonoBehaviour {
 
 	public void ChangeIcon(string newIcon) {
 		name = newIcon;
-	} 
+	}
+
 	public void ChangeColor(Color color) {
 		this.color = color;
+	}
+
+	public void ChangeAlpha(float alpha) {
+		ChangeColor(new Color(color.r, color.g, color.b, alpha));
 	}
 
 	public void SetRandomIcon() {

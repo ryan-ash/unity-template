@@ -3,6 +3,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
+using System.Linq;
 
 [ExecuteInEditMode]
 public class CSSParser : MonoBehaviour {
@@ -13,6 +14,9 @@ public class CSSParser : MonoBehaviour {
 
     public bool rebuild = false;
 
+    private static System.Random rand = new System.Random();
+
+    private static Dictionary<string, string> icons;
     public static Dictionary<string, string> Icons {
         get {
             if (icons == null) {
@@ -26,7 +30,10 @@ public class CSSParser : MonoBehaviour {
             return icons;
         }
     }
-    private static Dictionary<string, string> icons;
+
+    public static string GetRandomIconKey() {
+        return Icons.ElementAt(rand.Next(0, Icons.Count)).Key;
+    }
 
     private static string CSS {
         get {
@@ -46,5 +53,5 @@ public class CSSParser : MonoBehaviour {
             icons = null;
             rebuild = false;
         }
-    }        
+    }
 }
