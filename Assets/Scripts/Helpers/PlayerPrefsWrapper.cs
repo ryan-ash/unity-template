@@ -1,5 +1,4 @@
-﻿using Newtonsoft.Json;
-using System;
+﻿using System;
 using UnityEngine;
 
 public static class PlayerPrefsWrapper {
@@ -54,34 +53,10 @@ public static class PlayerPrefsWrapper {
             PlayerIsNewToTheGame = false;
         }
     }
-
-    /* private static Player _player;
-    public static Player CurrentPlayer 
-    {
-        get { 
-            if (_player == null) {
-                var jsonString = PlayerPrefs.GetString(PLAYER);
-                if (jsonString.Length == 0) {
-                    _player = new Player();
-                    Debug.Log("No player data found. Creating a new player object...");
-                } else {
-                    _player = JsonConvert.DeserializeObject<Player>(jsonString);
-                    Debug.Log("Player sucessfully recovered. Welcome back.");
-                }
-            }
-            return _player;
-        }
-        set {
-            var jsonString = JsonConvert.SerializeObject(value);
-            Debug.Log("Player has been saved. Breath out, your progress won't be lost from this point on.");
-            PlayerPrefs.SetString(PLAYER, jsonString);
-        }
-    } */
 		
     public static void Clear() 
     {
         PlayerPrefs.DeleteAll();
-        // _player = null;
         Debug.Log("Progress wipe is complete. You can start over.");
     }
 }
