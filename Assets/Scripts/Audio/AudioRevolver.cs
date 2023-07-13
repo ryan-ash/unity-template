@@ -59,6 +59,11 @@ public class AudioRevolver : MonoBehaviour {
         string[] consecutiveTriggers = triggerLine.Split(consecutiveTriggersDelimiter, StringSplitOptions.None);
         ParseTriggers(consecutiveTriggers);
     }
+
+    public static void Fire(string triggerLine)
+    {
+        instance.PlaySound(triggerLine);
+    }
     
     private void ParseTriggers(string[] consecutiveTriggers)
     {
