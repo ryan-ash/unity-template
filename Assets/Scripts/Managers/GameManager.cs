@@ -102,7 +102,7 @@ public class GameManager : MonoBehaviour {
 	}
 
 	private void PlaySound(string triggerLine) {
-		AudioRevolver.instance.PlaySound(triggerLine);
+		AudioRevolver.Fire(triggerLine);
 	}
 
 	private static void SetView(ViewController view, bool active) {
