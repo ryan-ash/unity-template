@@ -6,6 +6,8 @@
 /Assets/AssetStoreTools*
 
 *.log
+*.dwlt
+*.code-workspace
 
 # Visual Studio 2015 cache directory
 /.vs/
