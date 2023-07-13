@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Collections;
 using System;
 
-public class AudioManager : MonoBehaviour {
+public class AudioRevolver : MonoBehaviour {
     
     public Transform audioRoot;
 
@@ -13,7 +13,7 @@ public class AudioManager : MonoBehaviour {
     private string[] consecutiveTriggersDelimiter = new string[] { "//" };
     private char triggerElementsDelimiter = '/';
 
-    public static AudioManager instance;
+    public static AudioRevolver instance;
 
     void Awake()
     {
@@ -111,7 +111,7 @@ public class AudioManager : MonoBehaviour {
         // check if audio group is properly initialized
         if (action.targetSpace.elements == null)
         {
-            Debug.LogWarning("AudioManager :: initialization is not complete; don't run sounds on Start or Awake, use built in DefaultTrack system");
+            Debug.LogWarning("AudioRevolver :: initialization is not complete; don't run sounds on Start or Awake, use built in DefaultTrack system");
             action.type = AudioActionType.SelfDestruct;
             return action;
         }
@@ -119,7 +119,7 @@ public class AudioManager : MonoBehaviour {
         // and check if the target exists
         if (action.targetSpace.GetElementByName(action.targetName) == null)
         {
-            Debug.LogWarning("AudioManager :: couldn't find '" + cylinder[i] + "' in " + action.targetSpace.gameObject.name);
+            Debug.LogWarning("AudioRevolver :: couldn't find '" + cylinder[i] + "' in " + action.targetSpace.gameObject.name);
             action.type = AudioActionType.SelfDestruct;
             return action;
         }
@@ -175,7 +175,7 @@ public class AudioManager : MonoBehaviour {
         }
 
         // report a call problem if we haven't parsed the whole cylinder by now
-        Debug.LogWarning("AudioManager :: don't know what '" + cylinder[i] + "' is");
+        Debug.LogWarning("AudioRevolver :: don't know what '" + cylinder[i] + "' is");
 
         return action;
     }
